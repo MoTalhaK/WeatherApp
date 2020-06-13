@@ -1,5 +1,5 @@
 {
-  "name": "untitled1",
+  "name": "WeatherApp",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:8080",
@@ -11,6 +11,7 @@
     "bootstrap": "^4.5.0",
     "express": "^4.17.1",
     "mdbreact": "^4.27.0",
+    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-cool-onclickoutside": "^1.4.8",
     "react-dom": "^16.13.1",

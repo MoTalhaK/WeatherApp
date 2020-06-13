@@ -1,11 +1,10 @@
 import React from 'react';
-// import logo from './logo.svg';
 import './App.css';
 import 'weather-icons/css/weather-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Weather from './components/weather-comp';
 import Form from './components/form-comp';
-import Test from './components/test';
+import Title from './components/title-comp';
 
 const API_key = "e2be14a84108cb20bb1f5e6b89aac4e2";
 
@@ -31,7 +30,9 @@ class App extends React.Component {
             Snow: "wi-snow",
             Atmosphere: "wi-fog",
             Clear: "wi-day-sunny",
-            Clouds: "wi-day-fog"
+            Clear_night: "wi-night-clear",
+            Clouds: "wi-day-fog",
+            Clouds_night: "wi-night-fog"
         };
     }
 
@@ -71,13 +72,39 @@ class App extends React.Component {
         }
     }
 
+    get_weatherIcon_night(icons, rangeId) {
+        switch (true) {
+            case rangeId >= 200 && rangeId <= 232:
+                this.setState({icon: this.weatherIcon.Thunderstorm});
+                break;
+            case rangeId >= 300 && rangeId <= 321:
+                this.setState({icon: this.weatherIcon.Drizzle});
+                break;
+            case rangeId >= 500 && rangeId <= 531:
+                this.setState({icon: this.weatherIcon.Rain});
+                break;
+            case rangeId >= 600 && rangeId <= 622:
+                this.setState({icon: this.weatherIcon.Snow});
+                break;
+            case rangeId >= 701 && rangeId <= 781:
+                this.setState({icon: this.weatherIcon.Atmosphere});
+                break;
+            case rangeId === 800:
+                this.setState({icon: this.weatherIcon.Clear_night});
+                break;
+            case rangeId >= 801 && rangeId <= 804:
+                this.setState({icon: this.weatherIcon.Clouds_night});
+                break;
+        }
+    }
+
     getWeather = async (e) => {
         e.preventDefault();
 
         const city = e.target.elements.city.value;
 
         if (city) {
-            const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_key}`);
+            const api_call = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_key}`);
 
             const response = await api_call.json();
 
@@ -91,7 +118,14 @@ class App extends React.Component {
                 desc: response.weather[0].description,
                 curr_date: this.convert_date(response.dt)
             });
-            this.get_weatherIcon(this.weatherIcon, response.weather[0].id);
+            // this.get_weatherIcon(this.weatherIcon, response.weather[0].id);
+            if (JSON.stringify(response.weather[0].icon).indexOf("n") > -1) {
+                this.get_weatherIcon_night(this.weatherIcon, response.weather[0].id);
+                console.log("night")
+            } else {
+                this.get_weatherIcon(this.weatherIcon, response.weather[0].id);
+                console.log("day")
+            }
         } else {
             this.setState({error: true});
         }
@@ -100,7 +134,7 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                {/*<Test/>*/}
+                <Title/>
                 <Form loadweather={this.getWeather} error={this.state.error}/>
                 <Weather
                     city={this.state.city}

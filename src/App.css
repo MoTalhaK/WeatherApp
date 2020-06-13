@@ -2,10 +2,17 @@
   text-align: center;
 }
 
+body {
+  background-image: url('./images/blue-sky-with-stars-1585969.jpg');
+  background-size: cover;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
+
+/*#body-content {overflow: hidden}*/
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
